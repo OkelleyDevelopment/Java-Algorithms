@@ -12,5 +12,16 @@ public class noobchain{
 		Block thirdBlock = new Block("Hey im the third block",secondBlock.hash);
 		System.out.println("Hash for block 3 : " + thirdBlock.hash);
 
+
+		int chain = 0;
+		Block newBlock1 = new Block("New chain is made: ", thirdBlock.hash);
+
+		while(chain <= 2000){
+			Block newBlock = new Block("New chain is made: ",genesisBlock.hash);
+			System.out.println("Hash for block" + chain + " : " + newBlock.hash);
+			chain++;
+		}
+
+
 	}
 }
