@@ -12,9 +12,10 @@ import java.util.*;
  *
  * @since October 30, 2019
  */
-public class Graph{
+public class Graph2{
 
-	public enum{UNVISITED, VISITED}
+	public enum location { UNVISITED, VISITED};
+	public enum State { COMPLETE };
 	
 	// Keep  track of vertices
 	private ArrayList<Vertex> vertices;
@@ -26,7 +27,7 @@ public class Graph{
 	/**
 	 * Default constructor
 	 */
-	public Graph(){
+	public Graph2(){
 		vertices = new ArrayList<>();
 		edges = new ArrayList<>();
 	}
@@ -41,7 +42,7 @@ public class Graph{
 	 * @param weight - weight to of the edge
 	 *
 	 */
-	public void addVertex(T from, T to, int weight){
+	public void addEdge(T from, T to, int weight){
 
 		Edge temp = findEdge(from, to);
 
@@ -49,13 +50,14 @@ public class Graph{
 		//
 		if( temp != null){
 
-			System.out.println("Edge " + from + "," to +  " already exists. Changing weight.");
+			System.out.println("Edge " + from + "," + to +  " already exists. Changing weight.");
 			temp.cost = cost;
 		}
 		else{
 			// this should create the vertices
 			Edge e = new edge(from, to, weight);
 			edges.add(e);
+		}
 	}
 
 
@@ -67,10 +69,10 @@ public class Graph{
 	 * @return Vertex or null if not found
 	 *
 	 */
-	private Vertex findVertex(T v){
+	public Vertex findVertex(T v){
 		
-		for(Vertex each : vertices){
-			if(each.value.compareTo(v) == 0){
+		for(Vertex e : vertices){
+			if(e.value.compareTo(v) == 0){
 				return each;
 			}
 		}
@@ -132,7 +134,7 @@ public class Graph{
 	}
 
 	public void displayGraph(){
-		for(int i = 0l i < vertices; i ++){
+		for(int i = 0; i < vertices.size(); i ++){
 			for(int j = 0; j < vertices.size(); j++){
 				System.out.println("Vertex - " + i + " is connected to " + 
 						edges.get(j).end + " with weight " + edges.get(j).weight);
@@ -146,19 +148,19 @@ public class Graph{
 	
 	public static void main(String[] args){
 		int vertices = 6;
-		Graph graph = new Graph(vertices);
+		Graph2 graph = new Graph2();
 
 		graph.addEdge(0, 1, 4);
 		graph.addEdge(0, 2, 3);
-		graph.addEgde(1, 3, 2);
-            	graph.addEgde(1, 2, 5);
-            	graph.addEgde(2, 3, 7);
-            	graph.addEgde(3, 4, 2);
-            	graph.addEgde(4, 0, 4);
-            	graph.addEgde(4, 1, 4);
-            	graph.addEgde(4, 5, 6);
+		graph.addEdge(1, 3, 2);
+            	graph.addEdge(1, 2, 5);
+            	graph.addEdge(2, 3, 7);
+            	graph.addEdge(3, 4, 2);
+            	graph.addEdge(4, 0, 4);
+            	graph.addEdge(4, 1, 4);
+            	graph.addEdge(4, 5, 6);
 
-            	graph.printGraph();
+            	graph.displayGraph();
 	}
 	
 }

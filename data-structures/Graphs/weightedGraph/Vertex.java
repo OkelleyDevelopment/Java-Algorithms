@@ -34,6 +34,12 @@ public class Vertex {
 		this.located = false;
 		this.distance = 0.0;
 	}
+
+
+	public Vertex(String label){
+		this.name = label;
+	}
+
 	
 
 	
@@ -97,7 +103,8 @@ public class Vertex {
 		}
 
 		Vertex n = (Vertex)other;
-		return this.name.equals(n.name) && this.x == n.x && this. y == n.y;
+		return this.name.equals(n.name);
+		//return this.name.equals(n.name) && this.x == n.x && this. y == n.y;
 	}
 
 }
