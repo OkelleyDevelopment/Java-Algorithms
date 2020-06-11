@@ -21,6 +21,9 @@ public class Driver {
         Scanner scan = new Scanner(System.in);
         Graph g = new Graph();
         g.buildGraph(args[0]);
+
+// Move this to a function in the Graph file and then implement the menu
+// system here
         boolean running = true;
 
         while(running){
@@ -50,8 +53,6 @@ public class Driver {
             } catch(InputMismatchException e){
                 System.out.println("Can't you read? Integers are accepted here!");
             }
-
-            g.
 
         }
     }

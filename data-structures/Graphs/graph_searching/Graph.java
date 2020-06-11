@@ -46,6 +46,9 @@ public class Graph {
 		
     }
 
+    // Add the method that allows the start of journey
+    // collect the start vertex and destination vertex 
+    
 
     public void buildGraph(String inputFile){
         try{
