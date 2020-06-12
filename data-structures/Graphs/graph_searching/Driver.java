@@ -31,19 +31,17 @@ public class Driver {
                 try{
                     user_choice = scan.nextInt();
                     validEntry = true;
-                    scan.close();
+                    String search = selectChoice(user_choice);
+                    g.startJourney(search, scan);
                     
                 } catch (InputMismatchException e){
                     validEntry = false;
                     System.out.println("ERROR: Value is not an integer!");
-                } 
-                finally{
-                    scan.close();
                 }
             } while(!validEntry);
-            String search = selectChoice(user_choice);
-            g.startJourney(search);
+
         }
+        scan.close();
     }
 
     private static String selectChoice(int choice){
@@ -52,25 +50,28 @@ public class Driver {
             searchName = "DFS";
             //System.out.println("Ah, silly goose. Gotta build this");
         } else if(choice == 2){
-            System.out.println("Dang! 2 in a row");
+            //System.out.println("Dang! 2 in a row");
+            searchName = "trans";
         } else if(choice == 3){
             System.out.println("Dijkstra? A noble man");
+            searchName = "Dijkstra";
         } else if(choice == 4) {
             System.out.println("Loading a new map? Sure thing... how does that go again?");
         } else{
-            System.out.println("It seems the simulation is broken...\nGoodbye");
+            //System.out.println("It seems the simulation is broken...\nGoodbye");
             System.exit(0);
         }
-        System.out.println("searchName contains ====> " + searchName);
+        //System.out.println("searchName contains ====> " + searchName);
         return searchName;
     }
 
     private static void displayMenu(){
         System.out.println("========== Graph Searches ==========");
         System.out.println("1. Depth First Search");
-        System.out.println("2. Breadth First Search");
+        System.out.println("2. Transitive Closure");
         System.out.println("3. Dijkstra's Shortest Path");
         System.out.println("4. Load new graph");
+        System.out.println("5. Quit");
         System.out.println("=============================");
     }
 }

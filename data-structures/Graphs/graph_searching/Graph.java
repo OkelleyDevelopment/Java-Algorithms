@@ -16,6 +16,7 @@ import java.util.Scanner;
 
 public class Graph {
 
+    // The list of vertices in the graph
     private ArrayList<Vertex> vertexList;
     // Adj List where the list at each index corresponds to the vertices
     // adjacent to vertex ID 
@@ -24,44 +25,57 @@ public class Graph {
     private Stack stack;
     // A starting number to initalize our adjMatrix
     private final int maxVertices = 25;
+    // The number of total vertices in the vertexList
     private int numOfVertices;
+
+    // The adjacency matrix
+    private int[][] adjMatrix;
     
+    
+
     public Graph(){
         this.vertexList = new ArrayList<>();
         this.adjacencyList = new ArrayList<>();
+        this.adjMatrix = new int[maxVertices][maxVertices];
+        for(int row = 0; row < 20; row++){
+            for(int col = 0; col < 20; col++){
+                adjMatrix[col][row] = 0;
+            }
+        }
 		stack = new Stack();
     }
 
-    public void startJourney(String searchName){
+    public void startJourney(String searchName, Scanner input){
+        System.out.println("Reached startJourney");
         int source = -1;
         int dest = -1;
-        Scanner input = null;
-        Scanner readInput = null;
+        //Scanner input = null;
         try{
-            input = new Scanner(System.in);
+
             //readInput = new Scanner()
 			System.out.println("Please enter the source vertex #: ");
-			String line = input.nextLine();
-			readInput = new Scanner(line);
-			source = readInput.nextInt();
+            input = new Scanner(System.in);
+			source = input.nextInt();
 			if (source < 0){
 				System.out.println("Please try again with a "
 						+ "valid source vertex #.");
 				System.exit(0);
 			}
-            
-            //System.out.println("Input the destination vertex #: ");
-            //dest = scan.nextInt();
-            
+
+            System.out.println("Input the destination vertex #: ");
+            dest = input.nextInt();
+
             //input.close();
         }catch(InputMismatchException e){
             System.out.println("Check startJourney");
             System.out.println(Arrays.toString(e.getStackTrace()));
         }
-       
-        //if(searchName.equals("DFS")){
-          //  depthFirstSearch(source, dest);
-        //}
+
+        if(searchName.equals("DFS")){
+            System.out.println(depthFirstSearch(source, dest));
+        } else if(searchName.equals("trans")){
+            System.out.println(transitiveClosure());
+        }
     }
 
     public void buildGraph(String inputFile){
@@ -168,6 +182,33 @@ public class Graph {
         }
         resetVertices();
         return "No path exists between " + root + " and " + dest;
+    }
+
+
+    public int[][] transitiveClosure(){
+        boolean[][] reached = new boolean[numOfVertices][numOfVertices];
+        int[][] closure = new int[numOfVertices][numOfVertices];
+
+        for(int i = 0; i < numOfVertices; i++){
+            for(int j = 0; j < numOfVertices; j++){
+                if(adjMatrix[i][j] == 0){
+                    reached[i][j] = false;
+                } else{
+                    reached[i][j] = true;
+                }
+            }
+        }
+
+        for(int i = 0; i < numOfVertices; i++){
+            for(int j = 0; j < numOfVertices; j++){
+                if(reached[i][j] == false){
+                    closure[i][j] = 0;
+                } else {
+                    closure[i][j] = 1;
+                }
+            }
+        }
+        return closure;
     }
 
     public void displayGraph(){
