@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -16,39 +17,52 @@ import java.util.Scanner;
 public class Graph {
 
     private ArrayList<Vertex> vertexList;
-
     // Adj List where the list at each index corresponds to the vertices
     // adjacent to vertex ID 
     private ArrayList<ArrayList<Integer>> adjacencyList;
-
-    // Adjacency matrix where a value of 1 is an edge
-    private int[][] adjMatrix;
-
     // A stack for DFS
     private Stack stack;
-
     // A starting number to initalize our adjMatrix
     private final int maxVertices = 25;
-
     private int numOfVertices;
-
+    
     public Graph(){
         this.vertexList = new ArrayList<>();
         this.adjacencyList = new ArrayList<>();
-		this.adjMatrix = new int[maxVertices][maxVertices];
-		
-        for(int column=0; column < 20; column++){
-			for(int row=0; row < 20; row++){
-				adjMatrix[row][column] = 0;
-			}
-	    }
 		stack = new Stack();
-		
     }
 
-    // Add the method that allows the start of journey
-    // collect the start vertex and destination vertex 
-    
+    public void startJourney(String searchName){
+        int source = -1;
+        int dest = -1;
+        Scanner input = null;
+        Scanner readInput = null;
+        try{
+            input = new Scanner(System.in);
+            //readInput = new Scanner()
+			System.out.println("Please enter the source vertex #: ");
+			String line = input.nextLine();
+			readInput = new Scanner(line);
+			source = readInput.nextInt();
+			if (source < 0){
+				System.out.println("Please try again with a "
+						+ "valid source vertex #.");
+				System.exit(0);
+			}
+            
+            //System.out.println("Input the destination vertex #: ");
+            //dest = scan.nextInt();
+            
+            //input.close();
+        }catch(InputMismatchException e){
+            System.out.println("Check startJourney");
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+       
+        //if(searchName.equals("DFS")){
+          //  depthFirstSearch(source, dest);
+        //}
+    }
 
     public void buildGraph(String inputFile){
         try{
@@ -56,20 +70,21 @@ public class Graph {
 
             while(sc.hasNextLine()){
                 String mapData = sc.nextLine(); 
+                Scanner map = new Scanner(mapData);
 
-                int ID = 0;
+                int vertexID = 0;
                 int neighbor = 0;
                 try{
-                    ID = Integer.parseInt(mapData);
-                    neighbor = Integer.parseInt(mapData);
+                    vertexID = map.nextInt();
+                    neighbor = map.nextInt();
+                    map.close();
                 } catch(NumberFormatException e){
                     System.out.println("ERROR: The map appears to" +
-                            "have a smudge!\nPlease try another map.");
+                            " have a smudge!\nPlease try another map.");
                     System.exit(0);
                 }
 
-                int largest = Math.max(ID, neighbor);
-                adjMatrix[ID][neighbor] = 1;
+                int largest = Math.max(vertexID, neighbor);
 
                 for(int i = vertexList.size(); i < largest + 1; i++){
                     vertexList.add(new Vertex(i));
@@ -79,25 +94,26 @@ public class Graph {
                     adjacencyList.add(new ArrayList<>());
                 }
 
-                if(!(adjacencyList.get(ID).contains(neighbor))){
-                    int size = adjacencyList.get(ID).size();
+                if(!(adjacencyList.get(vertexID).contains(neighbor))){
+                    int size = adjacencyList.get(vertexID).size();
                     // if the size is zero, then just add the neighbor
                     if(size == 0){
-                        adjacencyList.get(ID).add(neighbor);
+                        adjacencyList.get(vertexID).add(neighbor);
                     } else{
                         // Sort out the adjacencyList 
                         // and then add in the new neighbor
                         while(size != 0){
-                            if(neighbor < adjacencyList.get(ID).get(size - 1)){
+                            if(neighbor < adjacencyList.get(vertexID).get(size - 1)){
                                 size--;
                             } else {
                                 break;
                             }
                         }
-                        adjacencyList.get(ID).add(size, neighbor);
+                        adjacencyList.get(vertexID).add(size, neighbor);
                     }
                 }   
             }
+            sc.close();
         } catch(FileNotFoundException e){
             System.out.println("That map is not available...");
             System.exit(0);
@@ -106,33 +122,56 @@ public class Graph {
 
 
 
-    public void displayGraph(){
-        System.out.println("\nVertex List: " + vertexList.toString() +
-                "\nAdjacency List: " + adjacencyList.toString() + 
-                "\n Adjacency Matrix: ");
-        printMatrix(adjMatrix);
 
+    //------------ Pathfinding and Search Algorithms ----------------//
+    
+    private void resetVertices(){
+        for(int i = 0; i < vertexList.size(); i++){
+            vertexList.get(i).setColor("White");
+        }
     }
 
-    private void printMatrix(int[][] givenMatrix){
-		
-		System.out.print("  ");
-		for(int k = 0; k < numOfVertices; k++){
-			System.out.print("  "+k);
-		}
-		System.out.println();
-		System.out.print("  ");
-		for(int l = 0; l < numOfVertices; l++){
-			System.out.print("  -");
-		}
-		System.out.println();
-		for (int i = 0; i < numOfVertices; i++){
-			System.out.print(i + " | ");
-	        for (int j = 0; j < numOfVertices; j++){
-	        	System.out.print(givenMatrix[i][j] + "  ");
-	        }
-	        System.out.println();
-	        System.out.println();
-	    }
-	}
+    public String depthFirstSearch(int root, int dest){
+        vertexList.get(root).setColor("Blue");
+        stack.push(root);
+        int i = 0;
+
+        while(!stack.isEmpty()){
+            int current = stack.peek();
+            ArrayList<Integer> temp = adjacencyList.get(current);
+            if(temp.isEmpty()){
+                stack.pop();
+                i++;
+            } else{
+                if(i < temp.size()){
+                    int adjVertex = temp.get(i);
+                    if(adjVertex == dest){
+                        String path = ""+dest;
+                        while(!stack.isEmpty()){
+                            path = stack.pop()+ " -> " + path;
+                        }
+                        return path;
+                    } else{
+                        if(!vertexList.get(adjVertex).getColor().equals("Blue")){
+                            vertexList.get(adjVertex).setColor("Blue");
+                            stack.push(adjVertex);
+                            i = 0;
+                        } else {
+                            i++;
+                        }
+                    }
+                } else {
+                    stack.pop();
+                    i = 0;
+                }
+            }
+        }
+        resetVertices();
+        return "No path exists between " + root + " and " + dest;
+    }
+
+    public void displayGraph(){
+        System.out.println("\nVertex List: " + vertexList.toString() +
+                "\nAdjacency List: " + adjacencyList.toString());
+    }
 }

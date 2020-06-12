@@ -18,42 +18,59 @@ public class Driver {
             System.exit(0);
         }
         
-        Scanner scan = new Scanner(System.in);
+        boolean running = true;
+        boolean validEntry = true;
+        // Start the Graph up
         Graph g = new Graph();
         g.buildGraph(args[0]);
-
-// Move this to a function in the Graph file and then implement the menu
-// system here
-        boolean running = true;
-
+        int user_choice = -1;
+        Scanner scan = new Scanner(System.in);
         while(running){
-            try{
-                Scanner source = new Scanner(System.in);
-                System.out.println("Enter the source vertex #: ");
-                int sourceVertex = source.nextInt();
-                while(sourceVertex < 0){
-                    System.out.println("Can't you read? Try again.");
-                    System.out.println("Enter the source vertex #: ");
-                    sourceVertex = source.nextInt();
+            displayMenu();
+            do{
+                try{
+                    user_choice = scan.nextInt();
+                    validEntry = true;
+                    scan.close();
+                    
+                } catch (InputMismatchException e){
+                    validEntry = false;
+                    System.out.println("ERROR: Value is not an integer!");
+                } 
+                finally{
+                    scan.close();
                 }
-
-            } catch(InputMismatchException e){
-                System.out.println("Can't you read? Integers are accepted here!");
-            }
-            try{
-                Scanner dest = new Scanner(System.in);
-                System.out.println("Enter the source vertex #: ");
-                int destVertex = dest.nextInt();
-                while(destVertex < 0){
-                    System.out.println("Can't you read? Try again.");
-                    System.out.println("Enter the source vertex #: ");
-                    destVertex = dest.nextInt();
-                }
-
-            } catch(InputMismatchException e){
-                System.out.println("Can't you read? Integers are accepted here!");
-            }
-
+            } while(!validEntry);
+            String search = selectChoice(user_choice);
+            g.startJourney(search);
         }
+    }
+
+    private static String selectChoice(int choice){
+        String searchName = "";
+        if(choice == 1){
+            searchName = "DFS";
+            //System.out.println("Ah, silly goose. Gotta build this");
+        } else if(choice == 2){
+            System.out.println("Dang! 2 in a row");
+        } else if(choice == 3){
+            System.out.println("Dijkstra? A noble man");
+        } else if(choice == 4) {
+            System.out.println("Loading a new map? Sure thing... how does that go again?");
+        } else{
+            System.out.println("It seems the simulation is broken...\nGoodbye");
+            System.exit(0);
+        }
+        System.out.println("searchName contains ====> " + searchName);
+        return searchName;
+    }
+
+    private static void displayMenu(){
+        System.out.println("========== Graph Searches ==========");
+        System.out.println("1. Depth First Search");
+        System.out.println("2. Breadth First Search");
+        System.out.println("3. Dijkstra's Shortest Path");
+        System.out.println("4. Load new graph");
+        System.out.println("=============================");
     }
 }
