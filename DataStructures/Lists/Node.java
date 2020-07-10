@@ -13,7 +13,7 @@
 public class Node {
 
     // A variable to hold the data of the node
-    private int data;
+    public int data;
 
     // Node to point to the next in the list
     Node next;
