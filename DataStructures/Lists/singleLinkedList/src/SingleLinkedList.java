@@ -1,6 +1,5 @@
 /**
- * A simple implementation of a linked list
- * in Java as review.
+ * A simple implementation of a linked list in Java as review.
  *
  * @author Nicholas O'Kelley
  * 
@@ -11,34 +10,33 @@ public class SingleLinkedList {
 
     // Head is used to reference the front/ start of the list
     private Node head;
-    
+
     // An int variable to keep track of the size of the list
     private int size;
 
     /**
      * A default constructor
      **/
-    public SingleLinkedList(){
+    public SingleLinkedList() {
         this.head = new Node(0);
         this.size = 0;
     }
 
-    public SingleLinkedList(Node start, int size){
+    public SingleLinkedList(Node start, int size) {
         this.head = start;
         this.size = size;
     }
 
-
-    public void insertHead(int data){
+    public void insertHead(int data) {
         insertAtPos(data, this.size);
     }
 
-    public void insert(int data){
+    public void insert(int data) {
         insertAtPos(data, size);
     }
 
-    public void insertAtPos(int data, int position){
-        if(position < 0 || position > this.size){
+    public void insertAtPos(int data, int position) {
+        if (position < 0 || position > this.size) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -53,13 +51,13 @@ public class SingleLinkedList {
         size++;
     }
 
-    public void deleteHead(){
+    public void deleteHead() {
         deleteAtPos(size - 1);
     }
 
-    public void deleteAtPos(int pos){
+    public void deleteAtPos(int pos) {
         // Check the bounds
-        if(pos < 0 || pos > this.size){
+        if (pos < 0 || pos > this.size) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -78,24 +76,22 @@ public class SingleLinkedList {
         size--;
     }
 
-
     /**
-     * A method to clear the list, setting all nodes
-     * to NULL and letting Java Garbage collection 
-     * take care of the clean up.
+     * A method to clear the list, setting all nodes to NULL and letting Java
+     * Garbage collection take care of the clean up.
      *
      * @param none
      *
      * @return none
      **/
-    public void clear(){
-        if(size == 0){
+    public void clear() {
+        if (size == 0) {
             return;
         }
         Node prev = head.next;
         Node curr = prev.next;
 
-        while(curr != null){
+        while (curr != null) {
             prev = null; // Set the Node to null to let GC take over
             prev = curr; // Set the previous node to the current
             curr = curr.next; // Set the current to the next node
@@ -105,53 +101,62 @@ public class SingleLinkedList {
         this.size = 0;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this.size == 0;
     }
 
-    public int size(){
+    public int size() {
         return this.size;
     }
 
-
     @Override
-    public String toString(){
-        if(size == 0){
+    public String toString() {
+        if (size == 0) {
             return "Empty List.";
         }
 
         StringBuilder builder = new StringBuilder();
         Node curr = head.next;
-        while(curr != null){
+        while (curr != null) {
             builder.append(curr.data).append(" --> ");
             curr = curr.next;
         }
         return builder.replace(builder.length() - 2, builder.length(), "").toString();
     }
 
-
     public static void main(String[] args) {
         SingleLinkedList list = new SingleLinkedList();
-        
+        int passed = 0;
+
+        System.out.println("Starting Tests");
         assert list.isEmpty();
+        passed++;
         assert list.toString().equals("Empty List.");
+        passed++;
 
         list.insertHead(4);
         list.insertHead(9);
         list.insertHead(11);
         assert list.toString().equals("11->9->4");
+        passed++;
 
         list.deleteHead();
         assert list.toString().equals("9->4");
+        passed++;
 
         list.insertAtPos(10, 2);
         assert list.toString().equals("9->4->10");
+        passed++;
 
         list.deleteAtPos(1);
         assert list.toString().equals("9->10");
+        passed++;
 
         list.clear();
         assert list.isEmpty();
+        passed++;
+
+        System.out.println(passed + " tests passed of 7");
     }
 
 }
